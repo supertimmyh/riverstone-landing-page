@@ -5,10 +5,10 @@ import { push } from 'gatsby-link'
 import { createSubscriber } from '../services'
 import className from 'classnames'
 
-function encode(data) {
+const encode = (data) => {
   return Object.keys(data)
     .map(
-      (key) =>
+      key =>
         encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
     )
     .join("&");
@@ -18,7 +18,7 @@ export default class Signup extends React.Component {
   constructor(props) {
     super(props)
     this.state = { 
-      email: '',
+      email: "",
       error: null,
       loading: false,
     }
@@ -33,51 +33,44 @@ export default class Signup extends React.Component {
     this.setState({ email: event.target.value, error: null })
   }
 
-  handleSignup = event => {
-    event.preventDefault()
+  handleSubmit = (event) => {
+    event.preventDefault();
 
     if (this.state.email == '') {
       return
-    }
+    };
 
     if (!this.validateEmail(this.state.email)) {
       this.setState({ error: 'That doesn\'t look like a valid email address' })
       return
-    }
+    };
 
-    this.setState({ loading: true })
+    this.setState({ loading: true });
 
-    // createSubscriber(this.state.email).then(data => {
-    //   if (!data.metadata.success) {
-    //     this.setState({ error: data.metadata.message, loading: false })
-    //     return
-    //   } else {
-    //     push('/signup-success')
-    //   }
-    // })
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault();
     fetch("/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: encode({
-        "form-name": event.target.getAttribute("name"),
-        ...name,
+        // "form-name": event.target.getAttribute("name"),
+        "form-name": "signup",
+        ...this.state,
       }),
     })
-      .then(() => push("/signup-success/"))
-      .catch((error) => alert(error));
+    .then(() => push("/signup-success/"))
+    // .then(() => alert("Success!"))
+    .catch((error) => alert(error));
   }
 
   render() {
     let btnClass = className('btn', 'btn-primary', 'input-group-btn', 'btn-lg', {
       'loading': this.state.loading
-    })
+    });
+
     let groupClass = className('form-group', {
       'has-error': this.state.error
-    })
+    });
+
+    const { email } = this.state;
 
     return (
       <div className={styles.root}>
@@ -86,8 +79,7 @@ export default class Signup extends React.Component {
         <input type="hidden" name="form-name" value="signup" />
           <div className="input-group">
             <input className="form-input input-lg" name="email" placeholder="Your email address" type="text" value={this.state.email} onChange={this.handleEmailChange} />
-            <button className={btnClass} type="button" onClick={this.handleSignup}>Signup</button>
-            {/* <button className={btnClass} type="button">Signup</button> */}
+            <button className={btnClass} type="submit">Signup</button>
           </div>
           { this.state.error ? <p className="form-input-hint">{this.state.error}</p> : null }
         </form>
