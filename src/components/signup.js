@@ -8,7 +8,7 @@ import className from 'classnames'
 const encode = (data) => {
   return Object.keys(data)
     .map(
-      key =>
+      (key) =>
         encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
     )
     .join("&");
@@ -51,9 +51,9 @@ export default class Signup extends React.Component {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: encode({
-        // "form-name": event.target.getAttribute("name"),
-        "form-name": "signup",
-        ...this.state,
+        "form-name": event.target.getAttribute("name"),
+        "email": this.state.email,
+        // ...this.state.email,
       }),
     })
     .then(() => push("/signup-success/"))
