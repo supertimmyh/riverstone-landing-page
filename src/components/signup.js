@@ -1,16 +1,11 @@
 import React from 'react'
 import styles from './signup.module.css'
-// import { navigate } from 'gatsby'
 import { push } from 'gatsby-link'
-import { createSubscriber } from '../services'
 import className from 'classnames'
 
 const encode = (data) => {
   return Object.keys(data)
-    .map(
-      (key) =>
-        encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
-    )
+    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
     .join("&");
 }
 export default class Signup extends React.Component {
@@ -29,7 +24,7 @@ export default class Signup extends React.Component {
       return re.test(String(email).toLowerCase());
   }
 
-  handleEmailChange = event => {
+  handleChange = event => {
     this.setState({ email: event.target.value, error: null })
   }
 
@@ -53,7 +48,6 @@ export default class Signup extends React.Component {
       body: encode({
         "form-name": event.target.getAttribute("name"),
         "email": this.state.email,
-        // ...this.state.email,
       }),
     })
     .then(() => push("/signup-success/"))
@@ -70,18 +64,19 @@ export default class Signup extends React.Component {
       'has-error': this.state.error
     });
 
-    const { email } = this.state;
+    // const { email } = this.state;
 
     return (
       <div className={styles.root}>
         <p>Get on the waiting list</p>
-        <form className={groupClass} data-netlify="true" name="signup" method="post" onSubmit={this.handleSubmit}>
-        <input type="hidden" name="form-name" value="signup" />
-          <div className="input-group">
-            <input className="form-input input-lg" name="email" placeholder="Your email address" type="text" value={this.state.email} onChange={this.handleEmailChange} />
-            <button className={btnClass} type="submit">Signup</button>
-          </div>
-          { this.state.error ? <p className="form-input-hint">{this.state.error}</p> : null }
+        <form className={groupClass} name="signup" method="post" action="/" data-netlify="true" data-netlify-honeypot="bot-field" onSubmit={this.handleSubmit}>
+          <input type="hidden" name="bot-field" />
+          <input type="hidden" name="form-name" value="signup" />
+            <div className="input-group">
+              <input className="form-input input-lg" name="email" placeholder="Your email address" type="text" value={this.state.email} onChange={this.handleChange} />
+              <button className={btnClass} type="submit">Signup</button>
+            </div>
+            { this.state.error ? <p className="form-input-hint">{this.state.error}</p> : null }
         </form>
       </div>
     )
