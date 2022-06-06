@@ -47,7 +47,8 @@ export default class Signup extends React.Component {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: encode({
         "form-name": event.target.getAttribute("name"),
-        "email": this.state.email,
+        // "email": this.state.email,
+        ...this.state,
       }),
     })
     .then(() => push("/signup-success/"))
@@ -64,14 +65,15 @@ export default class Signup extends React.Component {
       'has-error': this.state.error
     });
 
-    // const { email } = this.state;
+    const { email, error, loading } = this.state;
 
     return (
       <div className={styles.root}>
         <p>Get on the waiting list</p>
-        <form className={groupClass} name="signup" method="post" action="/" data-netlify="true" data-netlify-honeypot="bot-field" onSubmit={this.handleSubmit}>
+        {/* <form className={groupClass} name="signup" method="post" action="/" data-netlify="true" data-netlify-honeypot="bot-field" onSubmit={this.handleSubmit}>
           <input type="hidden" name="bot-field" />
-          <input type="hidden" name="form-name" value="signup" />
+          <input type="hidden" name="form-name" value="signup" /> */}
+        <form className={groupClass} name="signup" onSubmit={this.handleSubmit}>
             <div className="input-group">
               <input className="form-input input-lg" name="email" placeholder="Your email address" type="text" value={this.state.email} onChange={this.handleChange} />
               <button className={btnClass} type="submit">Signup</button>
